@@ -5,6 +5,7 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'providers/theme_provider.dart';
 import 'legacy_provider/favoritos_notifier.dart';
+import 'config/app_config.dart';
 
 void main() {
   runApp(
