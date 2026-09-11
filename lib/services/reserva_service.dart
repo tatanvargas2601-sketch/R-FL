@@ -17,8 +17,6 @@ class ReservaService {
         (data) => Reserva.fromJson(data),
       );
 
-  /// Crea una reserva a partir del carrito.
-  /// items: lista de {"idInventario": x, "cantidad": y}
   Future<Reserva> create({
     required int idCliente,
     required int idAdministrador,
@@ -29,9 +27,10 @@ class ReservaService {
     required List<Map<String, dynamic>> items,
   }) =>
       _client.unwrap<Reserva>(
-        () => _client.dio.post(_base, data: {
+        () => _client.dio.post('$_base/crear-con-detalles', data: {
           'id_cliente': idCliente,
           'id_administrador': idAdministrador,
+          'fecha_reserva': DateTime.now().toIso8601String().split('T').first,
           'fecha_evento': fechaEvento.toIso8601String().split('T').first,
           'fecha_inicio': fechaInicio.toIso8601String().split('T').first,
           'fecha_fin': fechaFin.toIso8601String().split('T').first,

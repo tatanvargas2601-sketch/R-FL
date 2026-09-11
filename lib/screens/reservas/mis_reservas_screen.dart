@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/reserva.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/reserva_service.dart';
+import '../../widgets/favoritos_action.dart';
 
 final misReservasProvider = FutureProvider.autoDispose<List<Reserva>>((ref) async {
   final auth = ref.watch(authProvider);
@@ -18,7 +19,7 @@ class MisReservasScreen extends ConsumerWidget {
     final reservasAsync = ref.watch(misReservasProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Mis reservas')),
+      appBar: AppBar(title: const Text('Mis reservas'), actions: const [FavoritosAction()]),
       body: reservasAsync.when(
         data: (reservas) => reservas.isEmpty
             ? const Center(child: Text('Aún no tienes reservas'))

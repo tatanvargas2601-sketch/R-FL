@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../models/cita.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/cita_service.dart';
+import '../../widgets/favoritos_action.dart';
 
 final citasProvider = FutureProvider.autoDispose<List<Cita>>((ref) async {
   final auth = ref.watch(authProvider);
@@ -19,7 +20,7 @@ class CitasScreen extends ConsumerWidget {
     final citasAsync = ref.watch(citasProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Mis citas')),
+      appBar: AppBar(title: const Text('Mis citas'), actions: const [FavoritosAction()]),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/agendar-cita'),
         icon: const Icon(Icons.add),

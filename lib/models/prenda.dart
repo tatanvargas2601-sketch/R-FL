@@ -9,8 +9,6 @@ class Prenda {
   final String? color;
   final double precioAlquiler;
   final List<PrendaImagen> imagenes;
-
-  // Viene de _stock_summary() en prendas_bp.py
   final int stockTotal;
   final int stockDisponible;
 
@@ -29,20 +27,24 @@ class Prenda {
 
   String get imagenPrincipal => imagenes.isNotEmpty ? imagenes.first.url : '';
 
-  factory Prenda.fromJson(Map<String, dynamic> json) => Prenda(
-        idPrenda: json['idPrenda'],
-        idCategoria: json['idCategoria'],
-        categoriaNombre: json['categoria_nombre'],
-        nombrePrenda: json['nombre_prenda'],
-        descripcion: json['descripcion'],
-        color: json['color'],
-        precioAlquiler: double.tryParse(json['precio_alquiler'].toString()) ?? 0,
-        imagenes: (json['imagenes'] as List? ?? [])
-            .map((e) => PrendaImagen.fromJson(e))
-            .toList(),
-        stockTotal: json['stock_total'] ?? 0,
-        stockDisponible: json['stock_disponible'] ?? 0,
-      );
+  factory Prenda.fromJson(Map<String, dynamic> json) {
+    final stock = json['stock'] as Map<String, dynamic>?;
+
+    return Prenda(
+      idPrenda: json['idPrenda'],
+      idCategoria: json['idCategoria'],
+      categoriaNombre: json['categoria_nombre'],
+      nombrePrenda: json['nombre_prenda'],
+      descripcion: json['descripcion'],
+      color: json['color'],
+      precioAlquiler: double.tryParse(json['precio_alquiler'].toString()) ?? 0,
+      imagenes: (json['images'] as List? ?? [])
+          .map((e) => PrendaImagen.fromJson(e))
+          .toList(),
+      stockTotal: stock?['stock_total'] ?? json['stock_total'] ?? 0,
+      stockDisponible: stock?['stock_disponible'] ?? json['stock_disponible'] ?? 0,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'idCategoria': idCategoria,

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/catalog_provider.dart';
 import '../../providers/cart_provider.dart';
+import '../../widgets/favoritos_action.dart';
 import '../../widgets/loading_error_view.dart';
 import '../../widgets/prenda_card.dart';
 
@@ -13,7 +14,7 @@ class DashboardUserScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authProvider);
-    final prendasAsync = ref.watch(prendasProvider);
+    final prendasAsync = ref.watch(prendasFiltradasProvider);
     final categoriasAsync = ref.watch(categoriasProvider);
     final categoriaSel = ref.watch(categoriaFiltroProvider);
     final cartCount = ref.watch(cartProvider).length;
@@ -22,6 +23,7 @@ class DashboardUserScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text('Hola, ${auth.usuario?.nombre ?? ''}'),
         actions: [
+          const FavoritosAction(),
           IconButton(
             icon: Badge(
               label: Text('$cartCount'),
@@ -48,8 +50,23 @@ class DashboardUserScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          // Filtro de categorías (search/talla/color de tu DashboardUser.jsx
-          // se pueden agregar acá siguiendo el mismo patrón cuando los necesites)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+            child: TextField(
+              onChanged: (value) => ref.read(busquedaProvider.notifier).state = value,
+              decoration: InputDecoration(
+                hintText: 'Buscar por nombre, color o descripción...',
+                prefixIcon: const Icon(Icons.search),
+                isDense: true,
+                suffixIcon: ref.watch(busquedaProvider).isEmpty
+                    ? null
+                    : IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => ref.read(busquedaProvider.notifier).state = '',
+                      ),
+              ),
+            ),
+          ),
           SizedBox(
             height: 48,
             child: AsyncValueView(
@@ -85,7 +102,7 @@ class DashboardUserScreen extends ConsumerWidget {
             child: AsyncValueView(
               value: prendasAsync,
               builder: (prendas) => prendas.isEmpty
-                  ? const Center(child: Text('No hay prendas disponibles'))
+                  ? const Center(child: Text('No se encontraron prendas'))
                   : GridView.builder(
                       padding: const EdgeInsets.all(12),
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

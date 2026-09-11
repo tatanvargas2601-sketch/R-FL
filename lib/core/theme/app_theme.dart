@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Paleta calcada 1:1 de src/styles/styles.css (:root y body.dark)
-/// del frontend React, para que la app se sienta igual.
 class AppColors {
-  // Light (:root)
   static const bgLight = Color(0xFFEFF7EE);
   static const surfaceLight = Color(0xFFFFFFFF);
   static const borderLight = Color(0xFFD7E2D3);
@@ -13,16 +10,14 @@ class AppColors {
   static const textLight = Color(0xFF132915);
   static const textMutedLight = Color(0xFF4D634E);
 
-  // Dark (body.dark)
   static const bgDark = Color(0xFF102012);
   static const surfaceDark = Color(0xFF17271A);
-  static const borderDark = Color(0x1FFFFFFF); // rgba(255,255,255,.12)
+  static const borderDark = Color(0x1FFFFFFF);
   static const primaryDarkMode = Color(0xFF8DBFA1);
   static const primaryDarkAccent = Color(0xFFDBE9D7);
   static const textDark = Color(0xFFF7F9F5);
   static const textMutedDark = Color(0xFFB9C3AF);
 
-  // Gradiente del panel izquierdo del login (light): #eff7ee -> #dfeadf
   static const loginLeftGradientLight = [Color(0xFFEFF7EE), Color(0xFFDFEADF)];
   static const loginLeftBgDark = Color(0xFF162418);
   static const welcomeTextDark = Color(0xFF66D17D);
@@ -40,8 +35,11 @@ class AppTheme {
           fontWeight: FontWeight.w700, color: text, fontSize: 24),
       titleLarge: GoogleFonts.inter(fontWeight: FontWeight.w700, color: text),
       titleMedium: GoogleFonts.inter(fontWeight: FontWeight.w600, color: text),
+      titleSmall: GoogleFonts.inter(fontWeight: FontWeight.w600, color: text),
+      labelLarge: GoogleFonts.inter(fontWeight: FontWeight.w600, color: text),
       bodyLarge: GoogleFonts.inter(color: text),
       bodyMedium: GoogleFonts.inter(color: textMuted),
+      bodySmall: GoogleFonts.inter(color: textMuted),
     );
   }
 
@@ -63,7 +61,7 @@ class AppTheme {
       elevation: 0,
       surfaceTintColor: Colors.transparent,
     ),
-cardTheme: CardThemeData(
+    cardTheme: CardThemeData(
       color: AppColors.surfaceLight,
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -119,7 +117,7 @@ cardTheme: CardThemeData(
       elevation: 0,
       surfaceTintColor: Colors.transparent,
     ),
-cardTheme: CardThemeData(
+    cardTheme: CardThemeData(
       color: AppColors.surfaceDark,
       elevation: 0,
       shape: RoundedRectangleBorder(

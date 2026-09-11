@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../models/cita.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/cita_service.dart';
+import '../../widgets/favoritos_action.dart';
 
 class AgendarCitaScreen extends ConsumerStatefulWidget {
   const AgendarCitaScreen({super.key});
@@ -18,8 +19,6 @@ class _AgendarCitaScreenState extends ConsumerState<AgendarCitaScreen> {
   TimeOfDay? _hora;
   bool _loading = false;
 
-  // Ajusta a un id de administrador/empleado real, o pide al backend
-  // un endpoint de "disponibilidad" para elegir a quién agendar.
   static const int kAdministradorId = 1;
 
   Future<void> _guardar() async {
@@ -50,7 +49,7 @@ class _AgendarCitaScreenState extends ConsumerState<AgendarCitaScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Agendar cita')),
+      appBar: AppBar(title: const Text('Agendar cita'), actions: const [FavoritosAction()]),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

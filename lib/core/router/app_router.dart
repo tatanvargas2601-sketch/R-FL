@@ -14,9 +14,9 @@ import '../../screens/profile/profile_screen.dart';
 import '../../screens/citas/citas_screen.dart';
 import '../../screens/citas/agendar_cita_screen.dart';
 import '../../screens/reservas/mis_reservas_screen.dart';
+import '../../screens/favoritos/favoritos_screen.dart';
 import '../../screens/admin/admin_shell.dart';
 import '../../screens/admin/dashboard_screen.dart';
-import '../../screens/admin/categorias_admin_screen.dart';
 import '../../screens/admin/productos_admin_screen.dart';
 import '../../screens/admin/inventario_admin_screen.dart';
 import '../../screens/admin/usuarios_admin_screen.dart';
@@ -25,8 +25,6 @@ import '../../screens/admin/lotes_admin_screen.dart';
 import '../../screens/admin/comprobantes_admin_screen.dart';
 import '../../screens/citas/citas_admin_screen.dart';
 
-/// Puente entre el estado de Riverpod (authProvider) y go_router,
-/// que necesita un Listenable para saber cuándo re-evaluar `redirect`.
 class _RouterRefreshNotifier extends ChangeNotifier {
   _RouterRefreshNotifier(Ref ref) {
     ref.listen(authProvider, (_, __) => notifyListeners());
@@ -44,24 +42,28 @@ final routerProvider = Provider<GoRouter>((ref) {
       final loggingIn = state.matchedLocation == '/login' || state.matchedLocation == '/registro';
       final goingHome = state.matchedLocation == '/';
 
-      if (auth.isLoading) return null; // aún restaurando sesión, no redirigir todavía
+      if (auth.isLoading) return null;
 
       final protectedAdmin = state.matchedLocation.startsWith('/admin');
       final protectedEmpleado = state.matchedLocation.startsWith('/empleado');
-      final protectedUser = ['/cart', '/profile', '/citas', '/agendar-cita', '/mis-reservas', '/dashboarduser']
-          .any((p) => state.matchedLocation.startsWith(p));
+      final protectedUser = [
+        '/cart',
+        '/profile',
+        '/citas',
+        '/agendar-cita',
+        '/mis-reservas',
+        '/dashboarduser',
+        '/favoritos'
+      ].any((p) => state.matchedLocation.startsWith(p));
 
-      // No autenticado intentando entrar a zona protegida -> login
       if (!auth.isAuthenticated && (protectedAdmin || protectedEmpleado || protectedUser)) {
         return '/login';
       }
 
-      // Autenticado y en login/registro -> mándalo a su dashboard
       if (auth.isAuthenticated && loggingIn) {
         return _homeForRole(auth.role);
       }
 
-      // Chequeo de rol: un "user" no puede entrar a /admin ni /empleado
       if (auth.isAuthenticated) {
         if (protectedAdmin && auth.role != AppRole.admin) return _homeForRole(auth.role);
         if (protectedEmpleado &&
@@ -71,9 +73,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         }
       }
 
-      // Justo después del login, auth.isAuthenticated pasa a true mientras seguimos
-      // en "/": mándalo directo a su dashboard según el rol (admin/empleado).
-      // Para "user" el catálogo ("/") es su home, así que no lo redirigimos.
       if (goingHome && auth.isAuthenticated) {
         if (auth.role == AppRole.admin) return '/admin';
         if (auth.role == AppRole.empleado) return '/empleado';
@@ -95,9 +94,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/citas', builder: (c, s) => const CitasScreen()),
       GoRoute(path: '/agendar-cita', builder: (c, s) => const AgendarCitaScreen()),
       GoRoute(path: '/mis-reservas', builder: (c, s) => const MisReservasScreen()),
+      GoRoute(path: '/favoritos', builder: (c, s) => const FavoritosScreen()),
 
-      // Shell con Drawer/BottomNav compartido para admin y empleado
-      // (igual que NavAdmin.jsx se reutiliza en ambas rutas en tu React).
       ShellRoute(
         builder: (c, s, child) => AdminShell(child: child),
         routes: [

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../services/reserva_service.dart';
+import '../../widgets/favoritos_action.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
@@ -18,17 +19,22 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   Future<void> _confirmar() async {
     final auth = ref.read(authProvider);
     final cart = ref.read(cartProvider);
+
     if (!auth.isAuthenticated) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Inicia sesión para reservar')));
       return;
     }
-    if (_rango == null || cart.isEmpty) return;
+    if (_rango == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Primero elige la fecha de inicio y fin del alquiler')),
+      );
+      return;
+    }
+    if (cart.isEmpty) return;
 
     setState(() => _loading = true);
     try {
-      // id_administrador: normalmente lo asigna el backend o un empleado;
-      // aquí se deja fijo como ejemplo, ajústalo a tu regla de negocio real.
       await ReservaService().create(
         idCliente: auth.usuario!.idUsuario,
         idAdministrador: 1,
@@ -36,7 +42,11 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         fechaInicio: _rango!.start,
         fechaFin: _rango!.end,
         items: cart
-            .map((i) => {'idInventario': i.idInventario, 'cantidad': i.cantidad})
+            .map((i) => {
+                  'idInventario': i.idInventario,
+                  'cantidad': i.cantidad,
+                  'subtotal': i.subtotal,
+                })
             .toList(),
       );
       ref.read(cartProvider.notifier).clear();
@@ -57,7 +67,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     final total = ref.watch(cartProvider.notifier).total;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Carrito')),
+      appBar: AppBar(title: const Text('Carrito'), actions: const [FavoritosAction()]),
       body: cart.isEmpty
           ? const Center(child: Text('Tu carrito está vacío'))
           : Column(
@@ -108,9 +118,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Total', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('Total', style: Theme.of(context).textTheme.titleMedium),
                           Text('S/ ${total.toStringAsFixed(2)}',
-                              style: const TextStyle(fontWeight: FontWeight.bold)),
+                              style: Theme.of(context).textTheme.titleMedium),
                         ],
                       ),
                       const SizedBox(height: 12),

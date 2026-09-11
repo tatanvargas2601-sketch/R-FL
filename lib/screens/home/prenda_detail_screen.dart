@@ -7,6 +7,7 @@ import '../../models/inventario.dart';
 import '../../providers/catalog_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../services/inventario_service.dart';
+import '../../widgets/favoritos_action.dart';
 
 class PrendaDetailScreen extends ConsumerWidget {
   final int idPrenda;
@@ -14,15 +15,32 @@ class PrendaDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final prendaAsync = ref.watch(prendaServiceProvider).getById(idPrenda);
+    final prendaAsync = ref.watch(prendaByIdProvider(idPrenda));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Detalle')),
-      body: FutureBuilder(
-        future: prendaAsync,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-          final prenda = snapshot.data!;
+      appBar: AppBar(
+        title: const Text('Detalle'),
+        actions: const [FavoritosAction()],
+      ),
+      body: prendaAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, _) => Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('No se pudo cargar la prenda: $err', textAlign: TextAlign.center),
+                const SizedBox(height: 12),
+                FilledButton(
+                  onPressed: () => ref.invalidate(prendaByIdProvider(idPrenda)),
+                  child: const Text('Reintentar'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        data: (prenda) {
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +48,13 @@ class PrendaDetailScreen extends ConsumerWidget {
                 AspectRatio(
                   aspectRatio: 1,
                   child: prenda.imagenPrincipal.isNotEmpty
-                      ? CachedNetworkImage(imageUrl: prenda.imagenPrincipal, fit: BoxFit.cover)
+                      ? CachedNetworkImage(
+                          imageUrl: prenda.imagenPrincipal,
+                          fit: BoxFit.cover,
+                          placeholder: (c, u) =>
+                              const Center(child: CircularProgressIndicator()),
+                          errorWidget: (c, u, e) => const Icon(Icons.broken_image),
+                        )
                       : Container(color: Colors.grey.shade200),
                 ),
                 Padding(
@@ -77,11 +101,17 @@ class PrendaDetailScreen extends ConsumerWidget {
                             icon: const Icon(Icons.add_shopping_cart),
                             label: const Text('Agregar al carrito'),
                             onPressed: () {
-                              ref
+                              final agregado = ref
                                   .read(cartProvider.notifier)
                                   .add(prenda, disponibles.first.idInventario);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Agregado al carrito')),
+                                SnackBar(
+                                  content: Text(
+                                    agregado
+                                        ? 'Agregado al carrito'
+                                        : 'Esta prenda ya está en tu carrito',
+                                  ),
+                                ),
                               );
                             },
                           );

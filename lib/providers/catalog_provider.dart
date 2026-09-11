@@ -13,9 +13,6 @@ final categoriasProvider = FutureProvider<List<Categoria>>((ref) {
   return ref.read(categoriaServiceProvider).getAll();
 });
 
-/// Filtro de categoria seleccionado en el catalogo (null = todas).
-/// Persiste en disco: si cerras la app con "Vestidos" seleccionado,
-/// al volver a abrirla sigue filtrado por "Vestidos".
 class CategoriaFiltroNotifier extends StateNotifier<int?> {
   CategoriaFiltroNotifier() : super(null) {
     _restore();
@@ -48,4 +45,34 @@ final categoriaFiltroProvider =
 final prendasProvider = FutureProvider<List<Prenda>>((ref) {
   final idCategoria = ref.watch(categoriaFiltroProvider);
   return ref.read(prendaServiceProvider).getAll(idCategoria: idCategoria);
+});
+
+final busquedaProvider = StateProvider<String>((ref) => '');
+
+final prendasFiltradasProvider = Provider<AsyncValue<List<Prenda>>>((ref) {
+  final asyncPrendas = ref.watch(prendasProvider);
+  final query = ref.watch(busquedaProvider).trim().toLowerCase();
+
+  return asyncPrendas.whenData((prendas) {
+    if (query.isEmpty) return prendas;
+    return prendas.where((p) {
+      final nombre = p.nombrePrenda.toLowerCase();
+      final color = (p.color ?? '').toLowerCase();
+      final descripcion = (p.descripcion ?? '').toLowerCase();
+      final categoria = (p.categoriaNombre ?? '').toLowerCase();
+      return nombre.contains(query) ||
+          color.contains(query) ||
+          descripcion.contains(query) ||
+          categoria.contains(query);
+    }).toList();
+  });
+});
+
+final prendaByIdProvider = FutureProvider.family<Prenda, int>((ref, id) {
+  return ref.read(prendaServiceProvider).getById(id);
+});
+
+final prendasFavoritasProvider = Provider<AsyncValue<List<Prenda>>>((ref) {
+  final asyncPrendas = ref.watch(prendasProvider);
+  return asyncPrendas;
 });

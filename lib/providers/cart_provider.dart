@@ -18,10 +18,6 @@ class CartItem {
   double get subtotal => prenda.precioAlquiler * cantidad;
 }
 
-/// Carrito con persistencia: guardamos solo los IDs livianos (idPrenda,
-/// idInventario, cantidad) en SharedPreferences, y al reabrir la app
-/// volvemos a pedir cada Prenda al backend para reconstruir el carrito
-/// completo (así siempre se ve el precio/stock actualizado, no uno viejo).
 class CartNotifier extends StateNotifier<List<CartItem>> {
   CartNotifier() : super([]) {
     _restore();
@@ -48,13 +44,13 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
             cantidad: entry['cantidad'] as int,
           ));
         } catch (_) {
-          // Prenda ya no existe o falló la carga: se descarta esa línea sola.
+          continue;
         }
       }
 
       state = items;
     } catch (_) {
-      // Sin conexión al abrir la app: dejamos el carrito vacío.
+      state = [];
     }
   }
 
@@ -70,15 +66,14 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
     await prefs.setString(_storageKey, encoded);
   }
 
-  void add(Prenda prenda, int idInventario) {
-    final index = state.indexWhere((i) => i.idInventario == idInventario);
-    if (index >= 0) {
-      state[index].cantidad += 1;
-      state = [...state];
-    } else {
-      state = [...state, CartItem(prenda: prenda, idInventario: idInventario)];
+  bool add(Prenda prenda, int idInventario) {
+    final yaExiste = state.any((i) => i.prenda.idPrenda == prenda.idPrenda);
+    if (yaExiste) {
+      return false;
     }
+    state = [...state, CartItem(prenda: prenda, idInventario: idInventario)];
     _persist();
+    return true;
   }
 
   void remove(int idInventario) {
