@@ -33,9 +33,9 @@ class PrendaService {
         (_) {},
       );
 
-  /// Sube una imagen para una prenda existente.
-  /// Ajusta el endpoint exacto si tu prendas_bp.py usa otra ruta
-  /// (revisa @prendas_bp.route('/<int:id>/imagenes', methods=['POST'])).
+  
+  
+  
   Future<void> uploadImagen(int idPrenda, String filePath) async {
     final formData = FormData.fromMap({
       'imagen': await MultipartFile.fromFile(filePath),

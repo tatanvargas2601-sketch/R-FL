@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/roles.dart';
 import '../../models/usuario.dart';
 import '../../services/rol_service.dart';
-import 'usuarios_admin_screen.dart'; // reutiliza usuarioServiceProvider
+import 'usuarios_admin_screen.dart'; 
 
 final rolServiceProvider = Provider((ref) => RolService());
 final rolesProvider = FutureProvider.autoDispose<List<Rol>>((ref) {
@@ -126,7 +126,7 @@ class _UsuarioFormScreenState extends ConsumerState<UsuarioFormScreen> {
               ),
               obscureText: true,
               validator: (v) {
-                if (_isEditing) return null; // opcional al editar
+                if (_isEditing) return null; 
                 if (v == null || v.length < 6) return 'Mínimo 6 caracteres';
                 return null;
               },

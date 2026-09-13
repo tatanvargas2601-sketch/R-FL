@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../providers/theme_provider.dart';
 
-/// Equivalente exacto a Inicio.jsx + Nav.jsx: es solo la landing pública
-/// (eyebrow + título + párrafo + tarjeta "Tu armario premium"), SIN catálogo.
-/// El catálogo real vive en DashboardUserScreen ("/dashboarduser"), a donde
-/// se entra después de iniciar sesión (igual que en React).
+
+
+
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -127,7 +127,7 @@ class _HeroSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // .eyebrow -> pill con el mismo texto
+          
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
@@ -149,7 +149,7 @@ class _HeroSection extends StatelessWidget {
                 ),
           ),
           const SizedBox(height: 28),
-          // .hero-tag
+          
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),

@@ -28,15 +28,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _error = null;
     });
     try {
-      // Igual que Login.jsx: correo en minúsculas y sin espacios.
+      
       await ref
           .read(authProvider.notifier)
           .login(_correoCtrl.text.trim().toLowerCase(), _passCtrl.text);
 
       final role = ref.read(authProvider).role;
       if (!mounted) return;
-      // Navegación explícita por rol (además del redirect de go_router),
-      // igual que el navigate() de tu Login.jsx.
+      
+      
       if (role == AppRole.admin) {
         context.go('/admin');
       } else if (role == AppRole.empleado) {
@@ -79,8 +79,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
 
     return Scaffold(
-      // Todo dentro de un único SingleChildScrollView (incluida la barra superior)
-      // para que nunca pueda desbordar verticalmente, sin importar el alto de la ventana.
+      
+      
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

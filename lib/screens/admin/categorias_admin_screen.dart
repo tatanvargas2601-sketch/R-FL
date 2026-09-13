@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/categoria.dart';
 import '../../providers/catalog_provider.dart';
 
-/// Este es el patrón de referencia para los demás CRUDs de admin:
-/// listar -> AsyncValue, crear/editar -> diálogo simple, eliminar -> confirmación.
+
+
 class CategoriasAdminScreen extends ConsumerWidget {
   const CategoriasAdminScreen({super.key});
 

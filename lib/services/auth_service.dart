@@ -11,7 +11,7 @@ class LoginResult {
 class AuthService {
   final _client = ApiClient.instance;
 
-  /// POST /api/login  (ver auth_bp.py)
+  
   Future<LoginResult> login({required String correo, required String contrasena}) async {
     final response = await _client.dio.post('/api/login', data: {
       'correo': correo,
@@ -30,9 +30,9 @@ class AuthService {
     return LoginResult(token: data['token'], usuario: usuario, role: role);
   }
 
-  /// GET /api/verify-token
-  /// El backend devuelve el payload del JWT en `data` (idUsuario, correo, rol, exp),
-  /// así que aprovechamos eso para restaurar el rol sin volver a pedir login.
+  
+  
+  
   Future<Map<String, dynamic>?> verifyToken() async {
     try {
       final response = await _client.dio.get('/api/verify-token');

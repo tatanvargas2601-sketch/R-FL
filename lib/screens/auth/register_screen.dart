@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../services/usuario_service.dart';
 
-/// Nota: el backend crea usuarios vía POST /api/usuarios (usuarios_bp.py).
-/// Ajusta idRol al id real del rol "user" en tu tabla Roles
-/// (puedes obtenerlo con GET /api/roles y guardarlo en una constante,
-/// o exponer un endpoint público de auto-registro si prefieres separarlo de admin).
+
+
+
+
 const int kDefaultUserRoleId = 3;
 
 class RegisterScreen extends StatefulWidget {

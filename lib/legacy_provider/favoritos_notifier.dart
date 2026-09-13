@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Ejemplo de uso del paquete "provider" clásico (ChangeNotifier +
-/// ChangeNotifierProvider), separado del resto de la app que usa Riverpod.
-/// Guarda que prendas marcó el usuario como favoritas, con persistencia
-/// en disco igual que hicimos en la Parte 1.
+
+
+
+
 class FavoritosNotifier extends ChangeNotifier {
   static const _storageKey = 'favoritos_v1';
   final Set<int> _idsFavoritos = {};
@@ -24,7 +24,7 @@ class FavoritosNotifier extends ChangeNotifier {
     } else {
       _idsFavoritos.add(idPrenda);
     }
-    notifyListeners(); // <- esto hace que Consumer/watch se actualicen solos
+    notifyListeners(); 
     await _persist();
   }
 

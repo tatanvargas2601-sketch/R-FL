@@ -1,6 +1,6 @@
-/// Tu backend Flask responde con la forma:
-/// { "status": "success" | "error", "message": str, "data": ... }
-/// (ver app/utils/response.py -> response_success / response_error)
+
+
+
 class ApiResponse<T> {
   final bool success;
   final String message;
@@ -21,7 +21,7 @@ class ApiResponse<T> {
   }
 }
 
-/// Excepción unificada para errores de red o de negocio (400/401/404/500)
+
 class ApiException implements Exception {
   final String message;
   final int? statusCode;

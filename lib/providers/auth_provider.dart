@@ -43,8 +43,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final _authService = AuthService();
   final _tokenStorage = TokenStorage();
 
-  /// Se ejecuta al abrir la app: intenta restaurar sesión con el token guardado
-  /// (equivalente a leer localStorage al montar App.jsx).
+  
+  
   Future<void> _restoreSession() async {
     final token = await _tokenStorage.getToken();
     if (token == null) {
@@ -57,9 +57,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = const AuthState(isLoading: false, isAuthenticated: false);
       return;
     }
-    // El payload trae { idUsuario, correo, rol, exp } (ver auth_bp.py -> generate_token).
-    // Con esto ya podemos enrutar bien sin re-pedir login. Si necesitas más datos
-    // del usuario (nombre, avatar, etc.), pide aquí GET /api/usuarios/<idUsuario>.
+    
+    
+    
     state = state.copyWith(
       isLoading: false,
       isAuthenticated: true,

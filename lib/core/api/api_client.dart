@@ -3,11 +3,11 @@ import '../storage/token_storage.dart';
 import 'api_response.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-/// IMPORTANTE - ajusta según dónde corras el backend Flask:
-/// - Emulador Android      -> http://10.0.2.2:5000
-/// - Simulador iOS         -> http://localhost:5000
-/// - Dispositivo físico    -> http://<IP-de-tu-PC-en-la-red>:5000
-/// - Flutter Web (dev)     -> http://localhost:5000 (y habilita ese origin en CORS del backend)
+
+
+
+
+
 String get kApiBaseUrl => kIsWeb ? 'http://localhost:5000' : 'http://10.0.2.2:5000';
 
 class ApiClient {
@@ -21,7 +21,7 @@ class ApiClient {
       ),
     );
 
-    // Equivalente exacto a tu interceptor de axios en api.jsx
+    
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -44,8 +44,8 @@ class ApiClient {
 
   Dio get dio => _dio;
 
-  /// Helper para desempaquetar { success, message, data } y lanzar
-  /// ApiException con el mismo mensaje que devuelve tu response_error().
+  
+  
   Future<T> unwrap<T>(
     Future<Response> Function() request,
     T Function(dynamic data) fromData,

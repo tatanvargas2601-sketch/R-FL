@@ -43,7 +43,7 @@ class Usuario {
         avatarUrl: json['avatar_url'],
       );
 
-  /// El rol "de verdad" para decidir navegación viene del JWT (ver auth_provider),
-  /// esto es solo un fallback basado en el nombre de rol crudo del usuario.
+  
+  
   AppRole get roleFallback => roleFromString(rolNombre?.toLowerCase());
 }

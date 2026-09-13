@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-/// Equivalente a localStorage.getItem/setItem/removeItem('token' / 'currentUser')
-/// pero cifrado en el dispositivo (Keychain en iOS, Keystore en Android).
+
+
 class TokenStorage {
   static const _tokenKey = 'auth_token';
   static const _userKey = 'current_user_json';
