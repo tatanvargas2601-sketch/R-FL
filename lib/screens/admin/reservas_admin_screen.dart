@@ -42,10 +42,24 @@ class ReservasAdminScreen extends ConsumerWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     child: ExpansionTile(
                       leading: CircleAvatar(backgroundColor: _colorForEstado(r.estado)),
-                      title: Text('Reserva #${r.idReserva} · Cliente #${r.idCliente}'),
-                      subtitle: Text(
-                        '${r.fechaInicio.toLocal().toString().split(' ').first} → '
-                        '${r.fechaFin.toLocal().toString().split(' ').first}',
+                      title: Text(
+                        'Reserva #${r.idReserva} · ${r.nombreCliente ?? 'Cliente #${r.idCliente}'}',
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '${r.fechaInicio.toLocal().toString().split(' ').first} → '
+                            '${r.fechaFin.toLocal().toString().split(' ').first}',
+                          ),
+                          if (r.detalles.isNotEmpty)
+                            Text(
+                              'Prendas: ${r.detalles.map((d) => d.nombrePrenda ?? 'Inv #${d.idInventario}').join(', ')}',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
                       ),
                       children: [
                         if (r.observaciones != null && r.observaciones!.isNotEmpty)
@@ -64,7 +78,7 @@ class ReservasAdminScreen extends ConsumerWidget {
                               for (final d in r.detalles)
                                 Chip(
                                   label: Text(
-                                    'Inv #${d.idInventario} x${d.cantidad} · S/ ${d.subtotal.toStringAsFixed(2)}',
+                                    '${d.nombrePrenda ?? 'Prenda'}${d.codigoInterno != null ? ' · ${d.codigoInterno}' : ' · Inv #${d.idInventario}'} • x${d.cantidad} • S/ ${d.subtotal.toStringAsFixed(2)}',
                                   ),
                                 ),
                             ],

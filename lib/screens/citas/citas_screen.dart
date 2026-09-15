@@ -35,8 +35,17 @@ class CitasScreen extends ConsumerWidget {
                   final cita = citas[i];
                   return ListTile(
                     leading: const Icon(Icons.event),
-                    title: Text(cita.motivo ?? 'Cita'),
-                    subtitle: Text(cita.fechaCita.toLocal().toString()),
+                    title: Text(cita.motivo?.isNotEmpty == true ? cita.motivo! : 'Cita'),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(cita.fechaCita.toLocal().toString().substring(0, 16)),
+                        if (cita.motivo != null && cita.motivo!.isNotEmpty)
+                          Text('Motivo: ${cita.motivo!}', maxLines: 2, overflow: TextOverflow.ellipsis),
+                      ],
+                    ),
+                    isThreeLine: cita.motivo != null && cita.motivo!.isNotEmpty,
                     trailing: Chip(label: Text(cita.estado.name)),
                   );
                 },

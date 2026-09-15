@@ -19,8 +19,7 @@ class DashboardScreen extends ConsumerWidget {
       (icon: Icons.event_note, label: 'Reservas', path: '$base/reservas'),
       (icon: Icons.receipt_long, label: 'Comprobantes', path: '$base/comprobantes'),
       (icon: Icons.event_available, label: 'Citas', path: '$base/citas'),
-      if (auth.role == AppRole.admin)
-        (icon: Icons.people, label: 'Usuarios', path: '$base/usuarios'),
+      (icon: Icons.people, label: 'Usuarios', path: '$base/usuarios'),
     ];
 
     return GridView.count(

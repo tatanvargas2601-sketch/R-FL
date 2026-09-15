@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/roles.dart';
 import '../../models/usuario.dart';
+import '../../providers/auth_provider.dart';
 import '../../services/rol_service.dart';
 import 'usuarios_admin_screen.dart'; 
 
@@ -30,6 +31,8 @@ class _UsuarioFormScreenState extends ConsumerState<UsuarioFormScreen> {
 
   bool get _isEditing => widget.existing != null;
 
+  bool get _isEmployeeCreate => !_isEditing && ref.read(authProvider).role == AppRole.empleado;
+
   @override
   void initState() {
     super.initState();
@@ -37,7 +40,19 @@ class _UsuarioFormScreenState extends ConsumerState<UsuarioFormScreen> {
   }
 
   Future<void> _guardar() async {
-    if (!_formKey.currentState!.validate() || _idRol == null) return;
+    if (!_formKey.currentState!.validate()) return;
+
+    if (_isEmployeeCreate && _idRol == null) {
+      final roles = await ref.read(rolServiceProvider).getAll();
+      final clienteRole = roles.firstWhere(
+        (role) => role.nombre.toLowerCase() == 'cliente',
+        orElse: () => throw Exception('No se encontró el rol cliente'),
+      );
+      _idRol = clienteRole.idRol;
+    }
+
+    if (_idRol == null) return;
+
     setState(() => _loading = true);
     try {
       final service = ref.read(usuarioServiceProvider);
@@ -73,6 +88,8 @@ class _UsuarioFormScreenState extends ConsumerState<UsuarioFormScreen> {
   @override
   Widget build(BuildContext context) {
     final rolesAsync = ref.watch(rolesProvider);
+    final auth = ref.watch(authProvider);
+    final isEmployeeCreate = !_isEditing && auth.role == AppRole.empleado;
 
     return Scaffold(
       appBar: AppBar(title: Text(_isEditing ? 'Editar usuario' : 'Nuevo usuario')),
@@ -105,19 +122,26 @@ class _UsuarioFormScreenState extends ConsumerState<UsuarioFormScreen> {
               validator: (v) => (v == null || v.isEmpty) ? 'Requerido' : null,
             ),
             const SizedBox(height: 12),
-            rolesAsync.when(
-              data: (roles) => DropdownButtonFormField<int>(
-                value: _idRol,
+            if (isEmployeeCreate)
+              TextFormField(
+                readOnly: true,
+                initialValue: 'Cliente',
                 decoration: const InputDecoration(labelText: 'Rol'),
-                items: roles
-                    .map((r) => DropdownMenuItem(value: r.idRol, child: Text(r.nombre)))
-                    .toList(),
-                onChanged: (v) => setState(() => _idRol = v),
-                validator: (v) => v == null ? 'Selecciona un rol' : null,
+              )
+            else
+              rolesAsync.when(
+                data: (roles) => DropdownButtonFormField<int>(
+                  value: _idRol,
+                  decoration: const InputDecoration(labelText: 'Rol'),
+                  items: roles
+                      .map((r) => DropdownMenuItem(value: r.idRol, child: Text(r.nombre)))
+                      .toList(),
+                  onChanged: (v) => setState(() => _idRol = v),
+                  validator: (v) => v == null ? 'Selecciona un rol' : null,
+                ),
+                loading: () => const LinearProgressIndicator(),
+                error: (e, st) => Text('Error cargando roles: $e'),
               ),
-              loading: () => const LinearProgressIndicator(),
-              error: (e, st) => Text('Error cargando roles: $e'),
-            ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _passCtrl,

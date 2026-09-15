@@ -31,9 +31,27 @@ class MisReservasScreen extends ConsumerWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     child: ListTile(
                       title: Text('Reserva #${r.idReserva}'),
-                      subtitle: Text(
-                        '${r.fechaInicio.toLocal().toString().split(' ').first} → '
-                        '${r.fechaFin.toLocal().toString().split(' ').first}',
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '${r.fechaInicio.toLocal().toString().split(' ').first} → '
+                            '${r.fechaFin.toLocal().toString().split(' ').first}',
+                          ),
+                          if (r.detalles.isNotEmpty)
+                            Text(
+                              'Prendas: ${r.detalles.map((d) => d.nombrePrenda ?? 'Inv #${d.idInventario}').join(', ')}',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          if (r.observaciones != null && r.observaciones!.isNotEmpty)
+                            Text(
+                              'Observaciones: ${r.observaciones}',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
                       ),
                       trailing: Chip(label: Text(r.estado.name)),
                     ),

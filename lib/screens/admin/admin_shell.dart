@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../models/usuario.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/theme_provider.dart';
 
 class AdminShell extends ConsumerWidget {
   final Widget child;
@@ -12,6 +13,7 @@ class AdminShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authProvider);
     final isAdmin = auth.role == AppRole.admin;
+    final themeMode = ref.watch(themeProvider);
     final base = isAdmin ? '/admin' : '/empleado';
     final location = GoRouterState.of(context).matchedLocation;
 
@@ -23,11 +25,22 @@ class AdminShell extends ConsumerWidget {
       (icon: Icons.event_note, label: 'Reservas', path: '$base/reservas'),
       (icon: Icons.receipt_long, label: 'Comprobantes', path: '$base/comprobantes'),
       (icon: Icons.event_available, label: 'Citas', path: '$base/citas'),
-      if (isAdmin) (icon: Icons.people, label: 'Usuarios', path: '$base/usuarios'),
+      (icon: Icons.people, label: 'Usuarios', path: '$base/usuarios'),
     ];
 
     return Scaffold(
-      appBar: AppBar(title: Text(isAdmin ? 'Panel Admin' : 'Panel Empleado')),
+      appBar: AppBar(
+        title: Text(isAdmin ? 'Panel Admin' : 'Panel Empleado'),
+        actions: [
+          IconButton(
+            tooltip: 'Cambiar tema',
+            icon: Icon(
+              themeMode == ThemeMode.dark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+            ),
+            onPressed: () => ref.read(themeProvider.notifier).toggle(),
+          ),
+        ],
+      ),
       drawer: Drawer(
         child: ListView(
           children: [

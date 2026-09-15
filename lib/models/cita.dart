@@ -15,6 +15,7 @@ class Cita {
   final int idCita;
   final int idAdministrador;
   final int idCliente;
+  final String? nombreCliente;
   final int? idReserva;
   final DateTime fechaCita;
   final String? motivo;
@@ -24,6 +25,7 @@ class Cita {
     required this.idCita,
     required this.idAdministrador,
     required this.idCliente,
+    this.nombreCliente,
     this.idReserva,
     required this.fechaCita,
     this.motivo,
@@ -34,6 +36,7 @@ class Cita {
         idCita: json['idCita'],
         idAdministrador: json['id_administrador'],
         idCliente: json['id_cliente'],
+        nombreCliente: json['nombre_cliente'],
         idReserva: json['id_reserva'],
         fechaCita: DateTime.parse(json['fecha_cita']),
         motivo: json['motivo'],

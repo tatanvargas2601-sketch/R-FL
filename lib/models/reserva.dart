@@ -21,6 +21,7 @@ class Reserva {
   final int idReserva;
   final int idCliente;
   final int idAdministrador;
+  final String? nombreCliente;
   final DateTime fechaReserva;
   final DateTime fechaEvento;
   final DateTime fechaInicio;
@@ -34,6 +35,7 @@ class Reserva {
     required this.idReserva,
     required this.idCliente,
     required this.idAdministrador,
+    this.nombreCliente,
     required this.fechaReserva,
     required this.fechaEvento,
     required this.fechaInicio,
@@ -48,6 +50,7 @@ class Reserva {
         idReserva: json['idReserva'],
         idCliente: json['id_cliente'],
         idAdministrador: json['id_administrador'],
+        nombreCliente: json['nombre_cliente'],
         fechaReserva: DateTime.parse(json['fecha_reserva']),
         fechaEvento: DateTime.parse(json['fecha_evento']),
         fechaInicio: DateTime.parse(json['fecha_inicio']),

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import '../core/api/api_client.dart';
 import '../models/prenda.dart';
@@ -36,9 +38,12 @@ class PrendaService {
   
   
   
-  Future<void> uploadImagen(int idPrenda, String filePath) async {
+  Future<void> uploadImagen(int idPrenda, Uint8List bytes, {String? filename}) async {
     final formData = FormData.fromMap({
-      'imagen': await MultipartFile.fromFile(filePath),
+      'imagen': MultipartFile.fromBytes(
+        bytes,
+        filename: filename ?? 'imagen.jpg',
+      ),
     });
     await _client.unwrap<void>(
       () => _client.dio.post('$_base/$idPrenda/imagenes', data: formData),

@@ -6,9 +6,9 @@ class CitaService {
   static const _base = '/api/citas';
 
   Future<List<Cita>> getAll({int? idCliente}) => _client.unwrap<List<Cita>>(
-        () => _client.dio.get(_base, queryParameters: {
-          if (idCliente != null) 'id_cliente': idCliente,
-        }),
+        () => _client.dio.get(
+          idCliente != null ? '$_base/cliente/$idCliente' : _base,
+        ),
         (data) => (data as List).map((e) => Cita.fromJson(e)).toList(),
       );
 

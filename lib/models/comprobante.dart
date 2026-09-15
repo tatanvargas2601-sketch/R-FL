@@ -5,6 +5,7 @@ class Comprobante {
   final String tipoComprobante;
   final double montoTotal;
   final String estado;
+  final String? nombreCliente;
   final String? descripcion;
 
   Comprobante({
@@ -14,6 +15,7 @@ class Comprobante {
     required this.tipoComprobante,
     required this.montoTotal,
     required this.estado,
+    this.nombreCliente,
     this.descripcion,
   });
 
@@ -24,6 +26,7 @@ class Comprobante {
         tipoComprobante: json['tipo_comprobante'],
         montoTotal: double.tryParse(json['monto_total'].toString()) ?? 0,
         estado: json['estado'],
+        nombreCliente: json['nombre_cliente'],
         descripcion: json['descripcion'],
       );
 }

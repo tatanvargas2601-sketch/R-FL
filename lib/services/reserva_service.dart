@@ -6,9 +6,9 @@ class ReservaService {
   static const _base = '/api/reservas';
 
   Future<List<Reserva>> getAll({int? idCliente}) => _client.unwrap<List<Reserva>>(
-        () => _client.dio.get(_base, queryParameters: {
-          if (idCliente != null) 'id_cliente': idCliente,
-        }),
+        () => _client.dio.get(
+          idCliente != null ? '$_base/cliente/$idCliente' : _base,
+        ),
         (data) => (data as List).map((e) => Reserva.fromJson(e)).toList(),
       );
 

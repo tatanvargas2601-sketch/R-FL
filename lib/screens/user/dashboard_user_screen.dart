@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/catalog_provider.dart';
 import '../../providers/cart_provider.dart';
+import '../../providers/theme_provider.dart';
 import '../../widgets/favoritos_action.dart';
 import '../../widgets/loading_error_view.dart';
 import '../../widgets/prenda_card.dart';
@@ -18,6 +19,7 @@ class DashboardUserScreen extends ConsumerWidget {
     final categoriasAsync = ref.watch(categoriasProvider);
     final categoriaSel = ref.watch(categoriaFiltroProvider);
     final cartCount = ref.watch(cartProvider).length;
+    final themeMode = ref.watch(themeProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -41,6 +43,13 @@ class DashboardUserScreen extends ConsumerWidget {
             icon: const Icon(Icons.receipt_long_outlined),
             tooltip: 'Mis reservas',
             onPressed: () => context.push('/mis-reservas'),
+          ),
+          IconButton(
+            tooltip: 'Cambiar tema',
+            icon: Icon(
+              themeMode == ThemeMode.dark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+            ),
+            onPressed: () => ref.read(themeProvider.notifier).toggle(),
           ),
           IconButton(
             icon: const Icon(Icons.person_outline),

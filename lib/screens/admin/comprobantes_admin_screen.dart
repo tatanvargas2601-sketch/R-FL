@@ -39,7 +39,7 @@ class ComprobantesAdminScreen extends ConsumerWidget {
                       leading: CircleAvatar(backgroundColor: _colorForEstado(c.estado)),
                       title: Text(c.numeroComprobante),
                       subtitle: Text(
-                        '${c.tipoComprobante} · Reserva #${c.idReserva}'
+                        '${c.tipoComprobante} · ${c.nombreCliente ?? 'Cliente #${c.idReserva}'} · Reserva #${c.idReserva}'
                         '${c.descripcion != null ? '\n${c.descripcion}' : ''}',
                       ),
                       isThreeLine: c.descripcion != null,

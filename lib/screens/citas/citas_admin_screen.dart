@@ -38,11 +38,24 @@ class CitasAdminScreen extends ConsumerWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     child: ListTile(
                       leading: CircleAvatar(backgroundColor: _colorForEstado(cita.estado)),
-                      title: Text(cita.motivo ?? 'Cita'),
-                      subtitle: Text(
-                        'Cliente #${cita.idCliente} · '
-                        '${cita.fechaCita.toLocal().toString().substring(0, 16)}',
+                      title: Text(cita.motivo?.isNotEmpty == true ? cita.motivo! : 'Cita'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '${cita.nombreCliente ?? 'Cliente #${cita.idCliente}'} · '
+                            '${cita.fechaCita.toLocal().toString().substring(0, 16)}',
+                          ),
+                          if (cita.motivo != null && cita.motivo!.isNotEmpty)
+                            Text(
+                              'Motivo: ${cita.motivo}',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
                       ),
+                      isThreeLine: cita.motivo != null && cita.motivo!.isNotEmpty,
                       trailing: DropdownButton<EstadoCita>(
                         value: cita.estado,
                         items: EstadoCita.values

@@ -49,7 +49,12 @@ class _ProductoFormScreenState extends ConsumerState<ProductoFormScreen> {
           : await service.update(widget.existing!.idPrenda, prenda);
 
       if (_imagenSeleccionada != null) {
-        await service.uploadImagen(saved.idPrenda, _imagenSeleccionada!.path);
+        final bytes = await _imagenSeleccionada!.readAsBytes();
+        await service.uploadImagen(
+          saved.idPrenda,
+          bytes,
+          filename: _imagenSeleccionada!.name,
+        );
       }
 
       if (mounted) Navigator.of(context).pop(true);
