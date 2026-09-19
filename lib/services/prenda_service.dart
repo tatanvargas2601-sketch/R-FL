@@ -40,13 +40,30 @@ class PrendaService {
   
   Future<void> uploadImagen(int idPrenda, Uint8List bytes, {String? filename}) async {
     final formData = FormData.fromMap({
-      'imagen': MultipartFile.fromBytes(
+      'images': MultipartFile.fromBytes(
         bytes,
         filename: filename ?? 'imagen.jpg',
       ),
     });
     await _client.unwrap<void>(
-      () => _client.dio.post('$_base/$idPrenda/imagenes', data: formData),
+      () => _client.dio.put('$_base/$idPrenda', data: formData),
+      (_) {},
+    );
+  }
+
+  Future<void> uploadImagenes(int idPrenda, List<Uint8List> bytesList, {List<String>? filenames}) async {
+    final formData = FormData();
+    final files = await Future.wait(bytesList.asMap().entries.map((entry) async {
+      return MultipartFile.fromBytes(
+        entry.value,
+        filename: filenames?[entry.key] ?? 'imagen.jpg',
+      );
+    }));
+    for (final file in files) {
+      formData.files.add(MapEntry('images', file));
+    }
+    await _client.unwrap<void>(
+      () => _client.dio.put('$_base/$idPrenda', data: formData),
       (_) {},
     );
   }

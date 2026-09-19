@@ -118,7 +118,7 @@ class DashboardUserScreen extends ConsumerWidget {
                         crossAxisCount: 2,
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
-                        childAspectRatio: 0.62,
+                        childAspectRatio: 0.72,
                       ),
                       itemCount: prendas.length,
                       itemBuilder: (context, i) {

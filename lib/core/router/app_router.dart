@@ -24,6 +24,7 @@ import '../../screens/admin/reservas_admin_screen.dart';
 import '../../screens/admin/lotes_admin_screen.dart';
 import '../../screens/admin/comprobantes_admin_screen.dart';
 import '../../screens/citas/citas_admin_screen.dart';
+import '../../screens/settings/settings_screen.dart';
 
 class _RouterRefreshNotifier extends ChangeNotifier {
   _RouterRefreshNotifier(Ref ref) {
@@ -91,6 +92,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/cart', builder: (c, s) => const CartScreen()),
       GoRoute(path: '/profile', builder: (c, s) => const ProfileScreen()),
+      GoRoute(path: '/settings', builder: (c, s) => const SettingsScreen()),
       GoRoute(path: '/citas', builder: (c, s) => const CitasScreen()),
       GoRoute(path: '/agendar-cita', builder: (c, s) => const AgendarCitaScreen()),
       GoRoute(path: '/mis-reservas', builder: (c, s) => const MisReservasScreen()),

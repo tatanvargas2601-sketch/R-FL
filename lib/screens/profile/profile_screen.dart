@@ -24,6 +24,11 @@ class ProfileScreen extends ConsumerWidget {
             ),
             onPressed: () => ref.read(themeProvider.notifier).toggle(),
           ),
+          IconButton(
+            tooltip: 'Configuración',
+            icon: const Icon(Icons.settings),
+            onPressed: () => context.push('/settings'),
+          ),
         ],
       ),
       body: usuario == null

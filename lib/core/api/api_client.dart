@@ -1,27 +1,28 @@
 import 'package:dio/dio.dart';
 import '../storage/token_storage.dart';
 import 'api_response.dart';
+import 'api_url_storage.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-
-
-
-
-
-String get kApiBaseUrl => kIsWeb ? 'http://localhost:5000' : 'http://10.0.2.2:5000';
-
 class ApiClient {
-  ApiClient._internal() {
-    _dio = Dio(
-      BaseOptions(
-        baseUrl: kApiBaseUrl,
-        connectTimeout: const Duration(seconds: 10),
-        receiveTimeout: const Duration(seconds: 10),
-        headers: {'Accept': 'application/json'},
-      ),
-    );
+  ApiClient._internal();
 
-    
+  static final ApiClient _instance = ApiClient._internal();
+
+  static ApiClient get instance => _instance;
+
+  static final _dio = Dio();
+  static final TokenStorage _tokenStorage = TokenStorage();
+
+  static Future<void> init() async {
+    final url = kIsWeb ? 'http://localhost:5000' : await ApiUrlStorage.getUrl();
+    _dio.options = BaseOptions(
+      baseUrl: url,
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
+      sendTimeout: const Duration(seconds: 30),
+      headers: {'Accept': 'application/json'},
+    );
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -31,21 +32,19 @@ class ApiClient {
           }
           handler.next(options);
         },
-        onError: (error, handler) {
+        onResponse: (response, handler) => handler.next(response),
+        onError: (error, handler) async {
+          if (error.response?.statusCode == 401) {
+            await _tokenStorage.clear();
+          }
           handler.next(error);
         },
       ),
     );
   }
 
-  static final ApiClient instance = ApiClient._internal();
-  late final Dio _dio;
-  final TokenStorage _tokenStorage = TokenStorage();
-
   Dio get dio => _dio;
 
-  
-  
   Future<T> unwrap<T>(
     Future<Response> Function() request,
     T Function(dynamic data) fromData,

@@ -20,7 +20,7 @@ class _ProductoFormScreenState extends ConsumerState<ProductoFormScreen> {
   late final _precioCtrl =
       TextEditingController(text: widget.existing?.precioAlquiler.toString() ?? '');
   int? _idCategoria;
-  XFile? _imagenSeleccionada;
+  List<XFile> _imagenesSeleccionadas = [];
   bool _loading = false;
 
   @override
@@ -48,13 +48,12 @@ class _ProductoFormScreenState extends ConsumerState<ProductoFormScreen> {
           ? await service.create(prenda)
           : await service.update(widget.existing!.idPrenda, prenda);
 
-      if (_imagenSeleccionada != null) {
-        final bytes = await _imagenSeleccionada!.readAsBytes();
-        await service.uploadImagen(
-          saved.idPrenda,
-          bytes,
-          filename: _imagenSeleccionada!.name,
+      if (_imagenesSeleccionadas.isNotEmpty) {
+        final bytesList = await Future.wait(
+          _imagenesSeleccionadas.map((img) => img.readAsBytes()),
         );
+        final filenames = _imagenesSeleccionadas.map((img) => img.name).toList();
+        await service.uploadImagenes(saved.idPrenda, bytesList, filenames: filenames);
       }
 
       if (mounted) Navigator.of(context).pop(true);
@@ -115,10 +114,14 @@ class _ProductoFormScreenState extends ConsumerState<ProductoFormScreen> {
             const SizedBox(height: 16),
             OutlinedButton.icon(
               icon: const Icon(Icons.image_outlined),
-              label: Text(_imagenSeleccionada == null ? 'Elegir imagen' : 'Imagen seleccionada ✓'),
+              label: Text(_imagenesSeleccionadas.isEmpty
+                  ? 'Elegir imágenes'
+                  : '${_imagenesSeleccionadas.length} imagen(es) seleccionada(s) ✓'),
               onPressed: () async {
-                final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-                if (picked != null) setState(() => _imagenSeleccionada = picked);
+                final picked = await ImagePicker().pickMultiImage();
+                if (picked.isNotEmpty) {
+                  setState(() => _imagenesSeleccionadas = picked);
+                }
               },
             ),
             const SizedBox(height: 24),
