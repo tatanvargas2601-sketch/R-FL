@@ -23,6 +23,7 @@ import '../../screens/admin/usuarios_admin_screen.dart';
 import '../../screens/admin/reservas_admin_screen.dart';
 import '../../screens/admin/lotes_admin_screen.dart';
 import '../../screens/admin/comprobantes_admin_screen.dart';
+import '../../screens/admin/reportes_admin_screen.dart';
 import '../../screens/citas/citas_admin_screen.dart';
 import '../../screens/settings/settings_screen.dart';
 
@@ -109,6 +110,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/admin/lotes', builder: (c, s) => const LotesAdminScreen()),
           GoRoute(path: '/admin/comprobantes', builder: (c, s) => const ComprobantesAdminScreen()),
           GoRoute(path: '/admin/citas', builder: (c, s) => const CitasAdminScreen()),
+          GoRoute(path: '/admin/reportes', builder: (c, s) => const ReportesAdminScreen()),
           GoRoute(path: '/empleado', builder: (c, s) => const DashboardScreen()),
           GoRoute(path: '/empleado/productos', builder: (c, s) => const ProductosAdminScreen()),
           GoRoute(path: '/empleado/usuarios', builder: (c, s) => const UsuariosAdminScreen()),

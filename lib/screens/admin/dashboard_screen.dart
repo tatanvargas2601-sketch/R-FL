@@ -12,14 +12,20 @@ class DashboardScreen extends ConsumerWidget {
     final auth = ref.watch(authProvider);
     final base = auth.role == AppRole.admin ? '/admin' : '/empleado';
 
-  final cards = [
+    final cards = [
       (icon: Icons.checkroom, label: 'Productos', path: '$base/productos'),
       (icon: Icons.layers_outlined, label: 'Lotes', path: '$base/lotes'),
       (icon: Icons.inventory_2, label: 'Inventario', path: '$base/inventario'),
       (icon: Icons.event_note, label: 'Reservas', path: '$base/reservas'),
-      (icon: Icons.receipt_long, label: 'Comprobantes', path: '$base/comprobantes'),
+      (
+        icon: Icons.receipt_long,
+        label: 'Comprobantes',
+        path: '$base/comprobantes'
+      ),
       (icon: Icons.event_available, label: 'Citas', path: '$base/citas'),
       (icon: Icons.people, label: 'Usuarios', path: '$base/usuarios'),
+      if (auth.role == AppRole.admin)
+        (icon: Icons.bar_chart, label: 'Reportes', path: '/admin/reportes'),
     ];
 
     return GridView.count(
@@ -37,7 +43,8 @@ class DashboardScreen extends ConsumerWidget {
                     children: [
                       Icon(c.icon, size: 40),
                       const SizedBox(height: 12),
-                      Text(c.label, style: Theme.of(context).textTheme.titleMedium),
+                      Text(c.label,
+                          style: Theme.of(context).textTheme.titleMedium),
                     ],
                   ),
                 ),

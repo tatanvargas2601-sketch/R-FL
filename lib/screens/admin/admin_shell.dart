@@ -26,6 +26,7 @@ class AdminShell extends ConsumerWidget {
       (icon: Icons.receipt_long, label: 'Comprobantes', path: '$base/comprobantes'),
       (icon: Icons.event_available, label: 'Citas', path: '$base/citas'),
       (icon: Icons.people, label: 'Usuarios', path: '$base/usuarios'),
+      if (isAdmin) (icon: Icons.bar_chart, label: 'Reportes', path: '/admin/reportes'),
     ];
 
     return Scaffold(
